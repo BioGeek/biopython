@@ -14,7 +14,7 @@ from Bio.Data.IUPACData import atom_weights
 
 
 _ATOM_FORMAT_STRING = (
-    "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%s%6.2f      %4s%2s%2s\n"
+    "%s%5i %-4s%c%3s%s%4i%c   %8.3f%8.3f%8.3f%s%6.2f      %4s%2s%2s\n"
 )
 _PQR_ATOM_FORMAT_STRING = (
     "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f %7s  %6s      %2s\n"
@@ -326,6 +326,8 @@ class PDBIO(StructureIO):
                 if not select.accept_chain(chain):
                     continue
                 chain_id = chain.get_id()
+                if len(chain_id)==1:
+                    chain_id = ' {}'.format(chain_id)
                 # necessary for TER
                 # do not write TER if no residues were written
                 # for this chain
@@ -357,7 +359,7 @@ class PDBIO(StructureIO):
                                 atom_number += 1
                 if chain_residues_written:
                     fp.write(
-                        "TER   %5i      %3s %c%4i%c                                                      \n"
+                        "TER   %5i      %3s %s%4i%c                                                      \n"
                         % (atom_number, resname, chain_id, resseq, icode)
                     )
 
